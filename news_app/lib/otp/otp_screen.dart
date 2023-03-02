@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, sort_child_properties_last, avoid_print, use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:haveliapp/auth/auth_cubit.dart';
 import 'package:haveliapp/otp/otp_cubit.dart';
 import 'package:haveliapp/otp/otp_state.dart';
 import 'package:haveliapp/profile/profile_cubit.dart';
@@ -31,18 +34,29 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    if (timer != null) {
+      timer!.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: BlocConsumer<OtpCubit, OtpState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is FAiled) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.msg!)));
               }
               if (state is Verifyed) {
+                await BlocProvider.of<AuthCubit>(context).loadUserDetails();
+                Navigator.popUntil(context, (route) => route.isFirst);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -124,7 +138,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       onPressed: !enableButton || state is Submiting
                           ? null
                           : () {
-                              BlocProvider.of<OtpCubit>(context).verifyOtp(otp);
+                              BlocProvider.of<OtpCubit>(context)
+                                  .verifyOtp(otp, widget.phone);
                             },
                       child: Text(
                         "VERIFY",

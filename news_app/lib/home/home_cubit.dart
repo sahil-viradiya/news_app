@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haveliapp/constant.dart';
 import 'package:haveliapp/models/news_model.dart';
 import 'package:haveliapp/home/home_repo.dart';
 import 'package:haveliapp/home/home_state.dart';
+import 'package:haveliapp/utils.dart';
+
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(Init());
   HomeRepo homerepo = HomeRepo();
@@ -10,13 +13,18 @@ class HomeCubit extends Cubit<HomeState> {
   void loadNews() {
     emit(Loading());
     homerepo.newsApi().then((response) {
-      List<NewsModel> list =  response.data.map<NewsModel>((jsonObject) {
+      List<NewsModel> list = response.data.map<NewsModel>((jsonObject) {
         return NewsModel.fromJson(jsonObject);
       }).toList();
       emit(Loaded(list));
     }).catchError((value) {
       DioError error = value;
       if (error.response != null) {
+        if (error.response!.statusCode == 401 ||
+            error.response!.statusCode == 403) {
+          deletToken();
+          emit(Failed(UNAUTHENTICATED));
+        }
         try {
           emit(Failed(error.response!.data));
         } catch (e) {

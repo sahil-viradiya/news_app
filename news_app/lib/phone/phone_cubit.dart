@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ class PhoneCubit extends Cubit<PhoneState> {
     }).catchError(
       (value) {
         DioError error = value;
+        print(error);
         if (error.response != null) {
           try {
             emit(Failed(error.response!.data));

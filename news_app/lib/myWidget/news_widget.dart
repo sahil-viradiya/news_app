@@ -1,17 +1,24 @@
+// ignore_for_file: must_be_immutable, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
+import 'package:haveliapp/constant.dart';
 import 'package:haveliapp/models/news_model.dart';
 import 'package:haveliapp/news_detail/news_detaill.dart';
 
 class NewsWidget extends StatelessWidget {
-NewsModel model;
-NewsWidget(this.model);
+  NewsModel model;
+  NewsWidget(this.model);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewsDetail(model),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewsDetail(model),
+              ));
         },
         child: Container(
           height: 200,
@@ -19,7 +26,7 @@ NewsWidget(this.model);
           child: Stack(
             children: [
               Image.network(
-                model.image,
+                BASE_URL + model.image,
                 height: 200,
                 fit: BoxFit.cover,
                 width: double.infinity,
@@ -36,20 +43,17 @@ NewsWidget(this.model);
                     children: [
                       Text(
                         model.title,
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 25),
+                        style: TextStyle(color: Colors.white, fontSize: 25),
                       ),
                       SizedBox(
                         height: 8,
                       ),
-                      Text(
-                          model.details,
+                      Text(model.details,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           // softWrap: false,
 
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12.5))
+                          style: TextStyle(color: Colors.white, fontSize: 12.5))
                     ],
                   ),
                 ),

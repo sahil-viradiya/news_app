@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:haveliapp/constant.dart';
 import 'package:haveliapp/models/news_model.dart';
 
 class NewsDetail extends StatelessWidget {
-NewsModel model;
-NewsDetail(this.model);
+  NewsModel model;
+  NewsDetail(this.model);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,19 +17,24 @@ NewsDetail(this.model);
             Container(
               height: 300,
               width: double.infinity,
-
               child: Image.network(
-                model.image,
+                BASE_URL + model.image,
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
-              ),
-            Text(model.title,style: TextStyle(color: Colors.white,fontSize: 28),),
+            ),
+            Text(
+              model.title,
+              style: TextStyle(color: Colors.white, fontSize: 28),
+            ),
             SizedBox(
               height: 8,
             ),
-            Text(model.details,style: TextStyle(color: Colors.white,fontSize: 16),),
+            Text(
+              model.details,
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ],
         ),
       ),
